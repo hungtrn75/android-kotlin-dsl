@@ -1,6 +1,5 @@
 object Versions {
     const val coroutinesVersion = "1.3.9"
-    const val koinVersion = "3.1.4"
     const val androidxCore = "1.7.0"
     const val androidxAppcompat = "1.5.1"
     const val androidxConstraintLayout = "2.1.4"
@@ -16,4 +15,6 @@ object Versions {
     const val koin = "3.1.4"
     const val coroutines = "1.3.9"
     const val lifecycle = "2.3.1"
+    const val serialization = "1.7.20"
+    const val serializationJson = "1.4.1"
 }

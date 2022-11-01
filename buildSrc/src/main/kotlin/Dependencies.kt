@@ -18,4 +18,6 @@ object Dependencies {
     const val coroutineAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
     const val koinCore = "io.insert-koin:koin-core:${Versions.koin}"
     const val koinAndroid = "io.insert-koin:koin-android:${Versions.koin}"
+    const val serialization = "org.jetbrains.kotlin:kotlin-serialization:${Versions.pluginKotlin}"
+    const val serializationJson = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.serializationJson}"
 }

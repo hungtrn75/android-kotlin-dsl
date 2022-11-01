@@ -1,17 +1,17 @@
-package com.skymapglobal.cctest.presentation.signup_screen
+package com.skymapglobal.cctest.presentation.sign_in_screen
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.view.WindowCompat
-import com.skymapglobal.cctest.databinding.ActivitySignUpBinding
+import com.skymapglobal.cctest.databinding.ActivitySignInBinding
 
-class SignUpActivity : AppCompatActivity() {
-    private lateinit var binding: ActivitySignUpBinding
+class SignInActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySignInBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        binding = ActivitySignUpBinding.inflate(layoutInflater)
+        binding = ActivitySignInBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
 }

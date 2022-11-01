@@ -51,7 +51,9 @@ dependencies {
     // Koin
     implementation(Dependencies.koinCore)
     implementation(Dependencies.koinAndroid)
-
+    // Serialization
+    implementation(Dependencies.serializationJson)
+    //
     implementation(Dependencies.androidxCoreKtx)
     implementation(Dependencies.androidxAppCompat)
     implementation(Dependencies.googleMaterialDesign)
