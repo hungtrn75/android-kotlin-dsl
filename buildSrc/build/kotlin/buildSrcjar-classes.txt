@@ -1,0 +1,1 @@
+/Users/hungtran/Desktop/android/cctest/buildSrc/build/classes/kotlin/main/AppConfig.class:/Users/hungtran/Desktop/android/cctest/buildSrc/build/classes/kotlin/main/Dependencies.class:/Users/hungtran/Desktop/android/cctest/buildSrc/build/classes/kotlin/main/Plugins.class:/Users/hungtran/Desktop/android/cctest/buildSrc/build/classes/kotlin/main/Versions.class
