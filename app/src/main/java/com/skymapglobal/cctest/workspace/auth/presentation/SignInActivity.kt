@@ -1,4 +1,4 @@
-package com.skymapglobal.cctest.presentation.sign_in_screen
+package com.skymapglobal.cctest.workspace.auth.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

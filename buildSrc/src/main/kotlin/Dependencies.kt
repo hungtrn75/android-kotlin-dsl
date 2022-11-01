@@ -20,4 +20,5 @@ object Dependencies {
     const val koinAndroid = "io.insert-koin:koin-android:${Versions.koin}"
     const val serialization = "org.jetbrains.kotlin:kotlin-serialization:${Versions.pluginKotlin}"
     const val serializationJson = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.serializationJson}"
+    const val arrow = "io.arrow-kt:arrow-core:${Versions.arrow}"
 }

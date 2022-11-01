@@ -53,6 +53,8 @@ dependencies {
     implementation(Dependencies.koinAndroid)
     // Serialization
     implementation(Dependencies.serializationJson)
+    // FP
+    implementation(Dependencies.arrow)
     //
     implementation(Dependencies.androidxCoreKtx)
     implementation(Dependencies.androidxAppCompat)

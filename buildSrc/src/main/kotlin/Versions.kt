@@ -17,4 +17,5 @@ object Versions {
     const val lifecycle = "2.3.1"
     const val serialization = "1.7.20"
     const val serializationJson = "1.4.1"
+    const val arrow = "1.1.2"
 }
