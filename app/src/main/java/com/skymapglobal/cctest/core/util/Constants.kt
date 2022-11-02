@@ -9,4 +9,5 @@ object Constants {
     const val login = "auth/login";
     const val signUp = "auth/mobile/register";
     const val me = "auth/me";
+    const val darkModeSettingKey = "dark-mode"
 }

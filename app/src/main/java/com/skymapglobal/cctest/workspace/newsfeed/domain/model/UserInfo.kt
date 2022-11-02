@@ -1,4 +1,4 @@
-package com.skymapglobal.cctest.workspace.auth.domain.model
+package com.skymapglobal.cctest.workspace.newsfeed.domain.model
 
 data class UserInfo(
     val email: String,

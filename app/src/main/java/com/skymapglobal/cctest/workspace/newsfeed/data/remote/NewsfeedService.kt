@@ -1,11 +1,11 @@
-package com.skymapglobal.cctest.workspace.auth.data.remote
+package com.skymapglobal.cctest.workspace.newsfeed.data.remote
 
 import com.skymapglobal.cctest.core.util.Constants
-import com.skymapglobal.cctest.workspace.auth.data.dto.LoginRespDto
-import com.skymapglobal.cctest.workspace.auth.data.dto.UserInfoDto
+import com.skymapglobal.cctest.workspace.newsfeed.data.dto.LoginRespDto
+import com.skymapglobal.cctest.workspace.newsfeed.data.dto.UserInfoDto
 import retrofit2.http.*
 
-interface AuthService {
+interface NewsfeedService {
     @Headers("Content-Type: application/json")
     @POST(Constants.login)
     suspend fun login(

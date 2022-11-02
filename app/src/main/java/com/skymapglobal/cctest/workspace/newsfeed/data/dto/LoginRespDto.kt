@@ -1,6 +1,6 @@
-package com.skymapglobal.cctest.workspace.auth.data.dto
+package com.skymapglobal.cctest.workspace.newsfeed.data.dto
 
-import com.skymapglobal.cctest.workspace.auth.domain.model.LoginResp
+import com.skymapglobal.cctest.workspace.newsfeed.domain.model.LoginResp
 import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.*

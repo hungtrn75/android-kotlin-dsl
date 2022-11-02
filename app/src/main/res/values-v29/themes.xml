@@ -6,4 +6,10 @@
     <item name="android:statusBarColor">@android:color/transparent</item>
     <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
   </style>
+
+    <style name="Base.Theme.Cctest" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:forceDarkAllowed">true</item>
+    </style>
 </resources>

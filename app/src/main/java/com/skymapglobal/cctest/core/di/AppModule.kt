@@ -3,13 +3,13 @@ package com.skymapglobal.cctest.core.di
 import android.content.Context
 import com.skymapglobal.cctest.core.util.AuthInterceptor
 import com.skymapglobal.cctest.core.util.Constants
-import com.skymapglobal.cctest.workspace.auth.data.remote.AuthRemoteDataSource
-import com.skymapglobal.cctest.workspace.auth.data.remote.AuthRemoteDataSourceImpl
-import com.skymapglobal.cctest.workspace.auth.data.remote.AuthService
-import com.skymapglobal.cctest.workspace.auth.data.repository.AuthRepoImpl
-import com.skymapglobal.cctest.workspace.auth.domain.repository.AuthRepo
-import com.skymapglobal.cctest.workspace.auth.domain.usecase.LoginUseCase
-import com.skymapglobal.cctest.workspace.auth.domain.usecase.MeUseCase
+import com.skymapglobal.cctest.workspace.newsfeed.data.remote.NewsfeedRemoteDataSource
+import com.skymapglobal.cctest.workspace.newsfeed.data.remote.NewsfeedRemoteDataSourceImpl
+import com.skymapglobal.cctest.workspace.newsfeed.data.remote.NewsfeedService
+import com.skymapglobal.cctest.workspace.newsfeed.data.repository.NewsfeedRepoImpl
+import com.skymapglobal.cctest.workspace.newsfeed.domain.repository.NewsfeedRepo
+import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.LoginUseCase
+import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.MeUseCase
 import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -40,8 +40,8 @@ val retrofitModule = module {
 }
 
 val serviceModule = module {
-    fun provideAuthService(retrofit: Retrofit): AuthService {
-        return retrofit.create(AuthService::class.java)
+    fun provideAuthService(retrofit: Retrofit): NewsfeedService {
+        return retrofit.create(NewsfeedService::class.java)
     }
     single {
         provideAuthService(get())
@@ -49,14 +49,14 @@ val serviceModule = module {
 }
 
 val dataSourceModule = module {
-    single<AuthRemoteDataSource> {
-        AuthRemoteDataSourceImpl(get())
+    single<NewsfeedRemoteDataSource> {
+        NewsfeedRemoteDataSourceImpl(get())
     }
 }
 
 val repositoryModule = module {
-    single<AuthRepo> {
-        AuthRepoImpl(get())
+    single<NewsfeedRepo> {
+        NewsfeedRepoImpl(get())
     }
 }
 

@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.skymapglobal.cctest">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
@@ -15,14 +17,17 @@
         android:theme="@style/Theme.Cctest"
         tools:targetApi="31">
         <activity
-            android:name=".workspace.auth.presentation.SignInActivity"
+            android:name=".workspace.details.presentation.DetailsActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".workspace.newsfeed.presentation.NewsfeedActivity"
             android:exported="true"
             android:theme="@style/Theme.Cctest">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
         </activity>
     </application>
+
 </manifest>

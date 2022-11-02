@@ -1,6 +1,6 @@
-package com.skymapglobal.cctest.workspace.auth.data.dto
+package com.skymapglobal.cctest.workspace.newsfeed.data.dto
 
-import com.skymapglobal.cctest.workspace.auth.domain.model.UserInfo
+import com.skymapglobal.cctest.workspace.newsfeed.domain.model.UserInfo
 import kotlinx.serialization.Serializable
 
 @Serializable

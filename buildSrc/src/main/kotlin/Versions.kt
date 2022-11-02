@@ -8,7 +8,7 @@ object Versions {
     const val androidxJUnit = "1.1.3"
     const val androidxEspresso = "3.4.0"
     const val materialDesign = "1.5.0-alpha04"
-    const val pluginKotlin = "1.7.10"
+    const val pluginKotlin = "1.7.20"
     const val pluginAndroid = "7.2.1"
     const val retrofit = "2.9.0"
     const val timber = "4.7.1"
