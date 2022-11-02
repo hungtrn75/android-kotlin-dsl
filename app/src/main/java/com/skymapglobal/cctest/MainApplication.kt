@@ -4,7 +4,6 @@ import android.app.Application
 import com.skymapglobal.cctest.core.di.*
 import com.skymapglobal.cctest.core.util.DebugTree
 import com.skymapglobal.cctest.core.util.NotLoggingTree
-import com.skymapglobal.cctest.BuildConfig
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -25,6 +24,7 @@ class MainApplication : Application() {
                     dataSourceModule,
                     repositoryModule,
                     useCaseModule,
+                    viewModelModule,
                 )
             )
         }

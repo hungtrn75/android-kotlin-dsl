@@ -1,10 +1,11 @@
 package com.skymapglobal.cctest.workspace.newsfeed.domain.repository
 
 import arrow.core.Either
-import com.skymapglobal.cctest.workspace.newsfeed.domain.model.LoginResp
-import com.skymapglobal.cctest.workspace.newsfeed.domain.model.UserInfo
+import com.skymapglobal.cctest.workspace.newsfeed.domain.model.NewsResp
 
 interface NewsfeedRepo {
-    abstract suspend fun login(body: Map<String, String>): Either<String, LoginResp>
-    abstract suspend fun me(): Either<String, UserInfo>
+    abstract suspend fun topHeadLines(page: Int, q: String?): Either<String, NewsResp>
+    abstract suspend fun everything(page: Int, q: String?): Either<String, NewsResp>
+    abstract suspend fun setDarkModeSetting(mode: Boolean)
+    abstract suspend fun getDarkModeSetting(): Boolean
 }

@@ -14,8 +14,9 @@ object Versions {
     const val timber = "4.7.1"
     const val koin = "3.1.4"
     const val coroutines = "1.3.9"
-    const val lifecycle = "2.3.1"
-    const val serialization = "1.7.20"
-    const val serializationJson = "1.4.1"
+    const val lifecycle = "2.5.1"
     const val arrow = "1.1.2"
+    const val jackson = "2.9.0"
+    const val jacksonKotlin = "2.13.4"
+    const val webkit = "1.5.0"
 }

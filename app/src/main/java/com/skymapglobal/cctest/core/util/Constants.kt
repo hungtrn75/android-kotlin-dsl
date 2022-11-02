@@ -1,13 +1,10 @@
 package com.skymapglobal.cctest.core.util
 
 object Constants {
-    const val baseUrl = "https://demobayer.eofactory.ai/core/api/";
-    const val baseUrlWithoutApi = "https://demobayer.eofactory.ai/core";
-    const val baseUrlWithoutPrefix =
-        "https://demobayer.eofactory.ai/core/api/view?path=";
-    const val gravatar = "https://www.gravatar.com/avatar";
-    const val login = "auth/login";
-    const val signUp = "auth/mobile/register";
-    const val me = "auth/me";
+    const val newsApiKey = "dda9e8cd75be490a952f09408616ea99"
+    const val pageSize = 15
+    const val baseUrl = "https://newsapi.org/v2/";
+    const val everything = "everything";
+    const val topHeadLines = "top-headlines";
     const val darkModeSettingKey = "dark-mode"
 }

@@ -41,8 +41,6 @@ android {
 }
 
 dependencies {
-    // Network
-    implementation(Dependencies.retrofit)
     // Timber
     implementation(Dependencies.timber)
     // Coroutines
@@ -51,8 +49,6 @@ dependencies {
     // Koin
     implementation(Dependencies.koinCore)
     implementation(Dependencies.koinAndroid)
-    // Serialization
-    implementation(Dependencies.serializationJson)
     // FP
     implementation(Dependencies.arrow)
     //
@@ -62,12 +58,14 @@ dependencies {
     implementation(Dependencies.androidxConstraintLayout)
     implementation(Dependencies.androidxNavigationFragmentKtx)
     implementation(Dependencies.androidxNavigationUiKtx)
-    implementation("androidx.appcompat:appcompat:1.5.1")
-    implementation("com.google.android.material:material:1.4.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.4.1")
-    implementation("androidx.navigation:navigation-ui-ktx:2.4.1")
-    implementation("androidx.webkit:webkit:1.4.0")
+    implementation(Dependencies.androidxLivedata)
+    implementation(Dependencies.androidxViewModel)
+    implementation(Dependencies.webkit)
+    // Retrofit
+    implementation(Dependencies.retrofit)
+    implementation(Dependencies.jackson)
+    implementation(Dependencies.jacksonKotlin)
+
     testImplementation(Dependencies.jUnit)
     androidTestImplementation(Dependencies.androidxTestJUnit)
     androidTestImplementation(Dependencies.androidxTestEspresso)

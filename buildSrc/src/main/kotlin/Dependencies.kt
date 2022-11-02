@@ -11,14 +11,20 @@ object Dependencies {
     const val androidxTestJUnit = "androidx.test.ext:junit:${Versions.androidxJUnit}"
     const val androidxTestEspresso =
         "androidx.test.espresso:espresso-core:${Versions.androidxEspresso}"
-    const val androidxConstraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.androidxConstraintLayout}"
+    const val androidxConstraintLayout =
+        "androidx.constraintlayout:constraintlayout:${Versions.androidxConstraintLayout}"
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
     const val timber = "com.jakewharton.timber:timber:${Versions.timber}"
     const val coroutineCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}"
-    const val coroutineAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
+    const val coroutineAndroid =
+        "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
     const val koinCore = "io.insert-koin:koin-core:${Versions.koin}"
     const val koinAndroid = "io.insert-koin:koin-android:${Versions.koin}"
-    const val serialization = "org.jetbrains.kotlin:kotlin-serialization:${Versions.pluginKotlin}"
-    const val serializationJson = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.serializationJson}"
     const val arrow = "io.arrow-kt:arrow-core:${Versions.arrow}"
+    const val jackson = "com.squareup.retrofit2:converter-jackson:${Versions.jackson}"
+    const val jacksonKotlin =
+        "com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jacksonKotlin}"
+    const val webkit = "androidx.webkit:webkit:${Versions.webkit}"
+    const val androidxLivedata = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
+    const val androidxViewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
 }

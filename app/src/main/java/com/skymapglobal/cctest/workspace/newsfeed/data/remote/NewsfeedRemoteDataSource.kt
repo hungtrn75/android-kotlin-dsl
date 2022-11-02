@@ -1,10 +1,9 @@
 package com.skymapglobal.cctest.workspace.newsfeed.data.remote
 
-import com.skymapglobal.cctest.workspace.newsfeed.data.dto.LoginRespDto
-import com.skymapglobal.cctest.workspace.newsfeed.data.dto.UserInfoDto
+import com.skymapglobal.cctest.workspace.newsfeed.data.dto.NewsRespDto
 
 interface NewsfeedRemoteDataSource {
-    abstract suspend fun login(body: Map<String, String>): LoginRespDto
-    abstract suspend fun me(): UserInfoDto
+    abstract suspend fun topHeadLines(page: Int, q: String?): NewsRespDto
+    abstract suspend fun everything(page: Int, q: String?): NewsRespDto
 }
 
