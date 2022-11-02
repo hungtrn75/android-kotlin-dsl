@@ -5,7 +5,7 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import timber.log.Timber
 
-class AuthInterceptor(val context: Context) : Interceptor {
+class AppInterceptor(val context: Context) : Interceptor {
     companion object {
         var token = ""
         var deviceId = ""

@@ -1,10 +1,15 @@
 package com.skymapglobal.cctest.workspace.newsfeed.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class NewsResp(
     val totalResults: Long,
     val articles: List<Article>?
-)
+) : Parcelable
 
+@Parcelize
 data class Article(
     val source: Source?,
     val author: String?,
@@ -14,9 +19,10 @@ data class Article(
     val urlToImage: String?,
     val publishedAt: String?,
     val content: String?
-)
+) : Parcelable
 
+@Parcelize
 data class Source(
     val id: String?,
     val name: String?
-)
+) : Parcelable

@@ -1,8 +1,10 @@
 package com.skymapglobal.cctest.core.di
 
 import android.content.Context
-import com.skymapglobal.cctest.core.util.AuthInterceptor
+import android.content.SharedPreferences
+import com.skymapglobal.cctest.core.util.AppInterceptor
 import com.skymapglobal.cctest.core.util.Constants
+import com.skymapglobal.cctest.workspace.details.presentation.DetailsViewModel
 import com.skymapglobal.cctest.workspace.newsfeed.data.local.NewsfeedLocalDataSource
 import com.skymapglobal.cctest.workspace.newsfeed.data.local.NewsfeedLocalDataSourceImpl
 import com.skymapglobal.cctest.workspace.newsfeed.data.remote.NewsfeedRemoteDataSource
@@ -10,8 +12,10 @@ import com.skymapglobal.cctest.workspace.newsfeed.data.remote.NewsfeedRemoteData
 import com.skymapglobal.cctest.workspace.newsfeed.data.remote.NewsfeedService
 import com.skymapglobal.cctest.workspace.newsfeed.data.repository.NewsfeedRepoImpl
 import com.skymapglobal.cctest.workspace.newsfeed.domain.repository.NewsfeedRepo
+import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.GetDarkModeSettingUseCase
 import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.GetNewsUseCase
 import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.GetTopHeadingsUseCase
+import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.SetDarkModeSettingUseCase
 import com.skymapglobal.cctest.workspace.newsfeed.presentation.NewsfeedViewModel
 import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -21,11 +25,11 @@ import retrofit2.converter.jackson.JacksonConverterFactory
 import java.util.concurrent.TimeUnit
 
 val retrofitModule = module {
-    fun provideInterceptor(context: Context): AuthInterceptor {
-        return AuthInterceptor(context)
+    fun provideInterceptor(context: Context): AppInterceptor {
+        return AppInterceptor(context)
     }
 
-    fun provideHttpClient(interceptor: AuthInterceptor): OkHttpClient {
+    fun provideHttpClient(interceptor: AppInterceptor): OkHttpClient {
         val okHttpClientBuilder = OkHttpClient.Builder()
         okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS)
         okHttpClientBuilder.connectTimeout(45, TimeUnit.SECONDS)
@@ -46,11 +50,18 @@ val retrofitModule = module {
 }
 
 val serviceModule = module {
+    fun provideSharedPreferences(context: Context): SharedPreferences {
+        return context.getSharedPreferences(Constants.sharedPreferencesKey, Context.MODE_PRIVATE)
+    }
+
     fun provideAuthService(retrofit: Retrofit): NewsfeedService {
         return retrofit.create(NewsfeedService::class.java)
     }
     single {
         provideAuthService(get())
+    }
+    single {
+        provideSharedPreferences(get())
     }
 }
 
@@ -76,10 +87,19 @@ val useCaseModule = module {
     single {
         GetNewsUseCase(get())
     }
+    single {
+        GetDarkModeSettingUseCase(get())
+    }
+    single {
+        SetDarkModeSettingUseCase(get())
+    }
 }
 
 val viewModelModule = module {
     viewModel {
-        NewsfeedViewModel(get(), get())
+        NewsfeedViewModel(get(), get(), get(), get())
+    }
+    viewModel {
+        DetailsViewModel(get(), get())
     }
 }

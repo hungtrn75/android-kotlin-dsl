@@ -7,4 +7,5 @@ object Constants {
     const val everything = "everything";
     const val topHeadLines = "top-headlines";
     const val darkModeSettingKey = "dark-mode"
+    const val sharedPreferencesKey = "news-app"
 }
