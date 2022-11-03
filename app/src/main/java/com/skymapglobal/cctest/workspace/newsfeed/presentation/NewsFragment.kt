@@ -30,7 +30,6 @@ class NewsFragment : Fragment(), NewsViewAdapter.OnNewsListener {
         arguments?.let {
             category = it.getString(CATEGORY)
             viewModel.inject(category!!)
-            Timber.e("onCreate: $category")
         }
     }
 
@@ -63,18 +62,15 @@ class NewsFragment : Fragment(), NewsViewAdapter.OnNewsListener {
         viewModel.topHeadingsLiveData.observe(viewLifecycleOwner) {
             if (it.first) {
                 val newList = it.second.articles?.toMutableList() ?: mutableListOf()
-                newList.add(Article(isPlaceHolder = true))
                 if (viewModel.searchSize == 0) {
                     newList.add(Article(isPlaceHolder = true))
                 }
+                newList.add(Article(isPlaceHolder = true))
                 newViewAdapter.submitList(newList)
-
             } else {
                 binding.swipeContainer.isRefreshing = false
                 newViewAdapter.submitList(it.second.articles)
-
             }
-
         }
         binding.recycleView.addOnScrollListener(onScrollChangeListener)
     }

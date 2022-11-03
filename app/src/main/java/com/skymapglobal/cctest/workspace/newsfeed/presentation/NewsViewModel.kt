@@ -38,6 +38,7 @@ class NewsViewModel constructor(private val getTopHeadingsUseCase: GetTopHeading
         }
     }
 
+    /* pull to refresh -> refresh: true */
     fun getNews(refresh: Boolean = false) = viewModelScope.launch(Dispatchers.IO) {
         if (_searching.value || searchSize >= _topHeadingsFlow.value.totalResults) return@launch
         withContext(Dispatchers.Main) {
@@ -63,8 +64,8 @@ class NewsViewModel constructor(private val getTopHeadingsUseCase: GetTopHeading
                 _searching.emit(false)
             }
         }) { newsReps ->
+            previousArticles.addAll(newsReps.articles ?: mutableListOf())
             withContext(Dispatchers.Main) {
-                previousArticles.addAll(newsReps.articles ?: mutableListOf())
                 _topHeadingsFlow.emit(newsReps.copy(articles = previousArticles))
                 _searching.emit(false)
             }
