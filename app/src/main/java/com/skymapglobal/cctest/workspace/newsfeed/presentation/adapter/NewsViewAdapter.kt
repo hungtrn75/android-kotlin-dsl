@@ -13,7 +13,8 @@ import com.skymapglobal.cctest.databinding.ItemNewsBinding
 import com.skymapglobal.cctest.databinding.ItemNewsFirstBinding
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.Article
 
-class NewsViewAdapter : ListAdapter<Article, NewsViewAdapter.BaseViewHolder>(DiffCallback()) {
+class NewsViewAdapter(private val listener: OnNewsListener) :
+    ListAdapter<Article, NewsViewAdapter.BaseViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -44,6 +45,9 @@ class NewsViewAdapter : ListAdapter<Article, NewsViewAdapter.BaseViewHolder>(Dif
     inner class NewsViewHolder(private val binding: ItemNewsBinding, private val context: Context) :
         BaseViewHolder(binding) {
         init {
+            binding.root.setOnClickListener {
+                listener.onNewsClick(getItem(bindingAdapterPosition))
+            }
             binding.shareBtn.setOnClickListener {
             }
         }
@@ -71,6 +75,9 @@ class NewsViewAdapter : ListAdapter<Article, NewsViewAdapter.BaseViewHolder>(Dif
     ) :
         BaseViewHolder(binding) {
         init {
+            binding.root.setOnClickListener {
+                listener.onNewsClick(getItem(bindingAdapterPosition))
+            }
             binding.shareBtn.setOnClickListener {
             }
         }
@@ -90,6 +97,10 @@ class NewsViewAdapter : ListAdapter<Article, NewsViewAdapter.BaseViewHolder>(Dif
             }
 
         }
+    }
+
+    interface OnNewsListener {
+        fun onNewsClick(item: Article)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Article>() {

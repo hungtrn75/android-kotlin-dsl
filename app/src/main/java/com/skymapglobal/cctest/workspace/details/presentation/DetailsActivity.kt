@@ -3,6 +3,7 @@ package com.skymapglobal.cctest.workspace.details.presentation
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -10,11 +11,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.webkit.WebSettingsCompat.*
 import androidx.webkit.WebViewFeature
 import com.skymapglobal.cctest.databinding.ActivityDetailsBinding
+import com.skymapglobal.cctest.workspace.newsfeed.domain.model.Article
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class DetailsActivity : AppCompatActivity() {
+    companion object {
+        const val article = "article"
+    }
+
     private lateinit var binding: ActivityDetailsBinding
     private val viewModel: DetailsViewModel by viewModel()
 
@@ -22,27 +28,42 @@ class DetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        settingViews()
+        settingViews(savedInstanceState)
         settingListeners()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        binding.webView.saveState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        binding.webView.restoreState(savedInstanceState)
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
-    private fun settingViews() {
-        setSupportActionBar(binding.appBar)
-        binding.apply {
-            webView.apply {
-                webViewClient = WebViewClient()
-                settings.javaScriptEnabled = true
-                settings.setSupportZoom(false)
-                loadUrl("https://techcrunch.com/2022/11/02/crypto-consumer-web3-solo-female-gp-magdalena-kala-double-down/")
+    private fun settingViews(savedInstanceState: Bundle?) {
+        val articleExtra = intent.getParcelableExtra<Article>(article)
+        if (articleExtra != null) {
+            binding.appBar.title = articleExtra.title
+            if (savedInstanceState == null) {
+                binding.webView.apply {
+                    webViewClient = WebViewClient()
+                    settings.javaScriptEnabled = true
+                    settings.setSupportZoom(false)
+                    loadUrl(articleExtra.url!!)
+                }
             }
             lifecycleScope.launch {
-                switchBtn.apply {
+                binding.switchBtn.apply {
                     isChecked = viewModel.getDarkMode()
                     setDarkMode()
                 }
             }
         }
+
+        setSupportActionBar(binding.appBar)
     }
 
     private fun settingListeners() {

@@ -62,10 +62,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-//            lifecycleScope.launch {
-//                val intent = Intent(context, DetailsActivity::class.java)
-//                startActivity(intent)
-//            }
+
         }
     }
 
