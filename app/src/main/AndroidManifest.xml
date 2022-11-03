@@ -20,7 +20,7 @@
             android:name=".workspace.details.presentation.DetailsActivity"
             android:exported="false"/>
         <activity
-            android:name=".workspace.newsfeed.presentation.NewsfeedActivity"
+            android:name=".workspace.main.presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Cctest">
             <intent-filter>

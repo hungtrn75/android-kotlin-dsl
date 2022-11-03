@@ -66,6 +66,8 @@ dependencies {
     implementation(Dependencies.retrofit)
     implementation(Dependencies.jackson)
     implementation(Dependencies.jacksonKotlin)
+    // ViewPager2
+    implementation("androidx.viewpager2:viewpager2:1.1.0-beta01")
 
     testImplementation(Dependencies.jUnit)
     androidTestImplementation(Dependencies.androidxTestJUnit)

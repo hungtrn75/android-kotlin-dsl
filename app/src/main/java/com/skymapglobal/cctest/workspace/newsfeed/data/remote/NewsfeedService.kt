@@ -9,7 +9,7 @@ interface NewsfeedService {
     suspend fun topHeadLines(
         @Query("pageSize") pageSize: Int = Constants.pageSize,
         @Query("page") page: Int,
-        @Query("q") q: String? = null,
+        @Query("category") category: String,
         @Query("apiKey") apiKey: String = Constants.newsApiKey,
     ): NewsRespDto
 

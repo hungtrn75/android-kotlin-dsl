@@ -45,8 +45,8 @@ fun ArticleDto.mapper() = Article(
     description = description,
     url = url,
     urlToImage = urlToImage,
-    publishedAt = publishedAt!!,
-    content = content!!,
+    publishedAt = publishedAt,
+    content = content,
 )
 
 fun NewsRespDto.mapper() =

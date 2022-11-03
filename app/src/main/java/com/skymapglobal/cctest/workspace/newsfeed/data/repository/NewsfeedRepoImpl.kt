@@ -8,23 +8,27 @@ import com.skymapglobal.cctest.workspace.newsfeed.data.remote.NewsfeedRemoteData
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.NewsResp
 import com.skymapglobal.cctest.workspace.newsfeed.domain.repository.NewsfeedRepo
 
-class NewsfeedRepoImpl constructor(private val newsfeedRemoteDataSource: NewsfeedRemoteDataSource, private val newsfeedLocalDataSource: NewsfeedLocalDataSource) :
+class NewsfeedRepoImpl constructor(
+    private val newsfeedRemoteDataSource: NewsfeedRemoteDataSource,
+    private val newsfeedLocalDataSource: NewsfeedLocalDataSource
+) :
     NewsfeedRepo {
-    override suspend fun topHeadLines(page: Int, q: String?): Either<String, NewsResp> = try {
-        val resp = newsfeedRemoteDataSource.topHeadLines(page, q).mapper()
+    override suspend fun topHeadLines(page: Int, category: String): Either<String, NewsResp> = try {
+        val resp = newsfeedRemoteDataSource.topHeadLines(page, category).mapper()
         Either.Right(resp)
     } catch (e: Exception) {
         Either.Left(NetworkError.handleException(e))
     }
 
-    override suspend fun everything(page: Int, q: String?): Either<String, NewsResp> = try {
-        val resp = newsfeedRemoteDataSource.everything(page, q).mapper()
+    override suspend fun everything(page: Int, category: String): Either<String, NewsResp> = try {
+        val resp = newsfeedRemoteDataSource.everything(page, category).mapper()
         Either.Right(resp)
     } catch (e: Exception) {
         Either.Left(NetworkError.handleException(e))
     }
 
-    override suspend fun setDarkModeSetting(mode: Boolean) = newsfeedLocalDataSource.storeDarkModeSetting(mode)
+    override suspend fun setDarkModeSetting(mode: Boolean) =
+        newsfeedLocalDataSource.storeDarkModeSetting(mode)
 
     override suspend fun getDarkModeSetting() = newsfeedLocalDataSource.retrieveDarkModeSetting()
 }

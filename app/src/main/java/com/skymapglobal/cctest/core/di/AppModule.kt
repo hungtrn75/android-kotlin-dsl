@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.skymapglobal.cctest.core.util.AppInterceptor
 import com.skymapglobal.cctest.core.util.Constants
 import com.skymapglobal.cctest.workspace.details.presentation.DetailsViewModel
+import com.skymapglobal.cctest.workspace.main.presentation.MainViewModel
 import com.skymapglobal.cctest.workspace.newsfeed.data.local.NewsfeedLocalDataSource
 import com.skymapglobal.cctest.workspace.newsfeed.data.local.NewsfeedLocalDataSourceImpl
 import com.skymapglobal.cctest.workspace.newsfeed.data.remote.NewsfeedRemoteDataSource
@@ -16,7 +17,7 @@ import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.GetDarkModeSett
 import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.GetNewsUseCase
 import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.GetTopHeadingsUseCase
 import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.SetDarkModeSettingUseCase
-import com.skymapglobal.cctest.workspace.newsfeed.presentation.NewsfeedViewModel
+import com.skymapglobal.cctest.workspace.newsfeed.presentation.NewsViewModel
 import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -97,9 +98,13 @@ val useCaseModule = module {
 
 val viewModelModule = module {
     viewModel {
-        NewsfeedViewModel(get(), get(), get(), get())
+        MainViewModel(get(), get())
+    }
+    viewModel {
+        NewsViewModel(get())
     }
     viewModel {
         DetailsViewModel(get(), get())
     }
+
 }
