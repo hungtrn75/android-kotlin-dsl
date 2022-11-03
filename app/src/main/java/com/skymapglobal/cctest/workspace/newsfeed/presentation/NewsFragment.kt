@@ -52,6 +52,9 @@ class NewsFragment : Fragment(), NewsViewAdapter.OnNewsListener {
             adapter = newViewAdapter
             setHasFixedSize(false)
         }
+        binding.swipeContainer.setOnRefreshListener {
+            viewModel.getNews(refresh = true)
+        }
     }
 
     private fun settingListeners() {
@@ -66,6 +69,7 @@ class NewsFragment : Fragment(), NewsViewAdapter.OnNewsListener {
                 newViewAdapter.submitList(newList)
 
             } else {
+                binding.swipeContainer.isRefreshing = false
                 newViewAdapter.submitList(it.second.articles)
 
             }

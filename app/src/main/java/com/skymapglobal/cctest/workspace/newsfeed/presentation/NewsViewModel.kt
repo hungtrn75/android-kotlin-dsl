@@ -36,12 +36,19 @@ class NewsViewModel constructor(private val getTopHeadingsUseCase: GetTopHeading
         }
     }
 
-    private fun getNews() = viewModelScope.launch(Dispatchers.IO) {
+    fun getNews(refresh: Boolean = false) = viewModelScope.launch(Dispatchers.IO) {
         if (_searching.value) return@launch
         withContext(Dispatchers.Main) {
+            if (refresh)
+                _topHeadingsFlow.emit(NewsResp(totalResults = 0, articles = mutableListOf()))
             _searching.emit(true)
         }
-        val resp = getTopHeadingsUseCase.execute(NewsfeedQuery(page = 1, category = category))
+        val resp = getTopHeadingsUseCase.execute(
+            NewsfeedQuery(
+                page = if (refresh) 1 else 1,
+                category = category
+            )
+        )
         resp.fold({ error ->
             Timber.e("getNews: $error")
             withContext(Dispatchers.Main) {

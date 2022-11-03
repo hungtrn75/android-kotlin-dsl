@@ -73,6 +73,7 @@ dependencies {
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
     implementation("com.facebook.shimmer:shimmer:0.5.0")
     implementation("org.ocpsoft.prettytime:prettytime:5.0.4.Final")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     testImplementation(Dependencies.jUnit)
     androidTestImplementation(Dependencies.androidxTestJUnit)
