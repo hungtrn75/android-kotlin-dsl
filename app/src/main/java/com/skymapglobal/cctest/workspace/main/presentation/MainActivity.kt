@@ -3,6 +3,7 @@ package com.skymapglobal.cctest.workspace.main.presentation
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
@@ -61,8 +62,6 @@ class MainActivity : AppCompatActivity() {
                     setDarkMode()
                 }
             }
-
-
         }
     }
 

@@ -1,6 +1,7 @@
 package com.skymapglobal.cctest.workspace.newsfeed.presentation.adapter
 
 import android.content.Context
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,11 @@ import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.skymapglobal.cctest.databinding.ItemNewsBinding
 import com.skymapglobal.cctest.databinding.ItemNewsFirstBinding
+import com.skymapglobal.cctest.databinding.ItemNewsShimmerBinding
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.Article
+import org.ocpsoft.prettytime.PrettyTime
+import java.text.SimpleDateFormat
+import java.util.*
 
 class NewsViewAdapter(private val listener: OnNewsListener) :
     ListAdapter<Article, NewsViewAdapter.BaseViewHolder>(DiffCallback()) {
@@ -22,6 +27,8 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
         val binding = ItemNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val firstBinding =
             ItemNewsFirstBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val shimmerBinding =
+            ItemNewsShimmerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return when (viewType) {
             0 -> NewsFirstViewHolder(firstBinding, parent.context)
             else -> NewsViewHolder(binding, parent.context)
@@ -65,7 +72,12 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
                 visibility = if (item.description == null) View.GONE else View.VISIBLE
                 text = item.description
             }
-
+            val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ROOT)
+            val prettyTime = PrettyTime(Locale.ENGLISH)
+            val ago = prettyTime.format(format.parse(item.publishedAt!!))
+            binding.info.apply {
+                text = "$ago | ${item.source?.name}"
+            }
         }
     }
 
@@ -95,8 +107,24 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
                 visibility = if (item.description == null) View.GONE else View.VISIBLE
                 text = item.description
             }
+            val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ROOT)
+            val prettyTime = PrettyTime(Locale.ENGLISH)
+            val ago = prettyTime.format(format.parse(item.publishedAt!!))
+            binding.info.apply {
+                text = "$ago | ${item.source?.name}"
+            }
+        }
+    }
+
+    inner class NewsShimmerViewHolder(
+        private val binding: ItemNewsShimmerBinding,
+        private val context: Context
+    ) :
+        BaseViewHolder(binding) {
+        override fun bind(item: Article, position: Int) {
 
         }
+
     }
 
     interface OnNewsListener {
