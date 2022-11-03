@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.skymapglobal.cctest.databinding.FragmentNewsBinding
 import com.skymapglobal.cctest.workspace.details.presentation.DetailsActivity
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.Article
@@ -21,6 +22,7 @@ class NewsFragment : Fragment(), NewsViewAdapter.OnNewsListener {
     private lateinit var binding: FragmentNewsBinding
     private lateinit var newViewAdapter: NewsViewAdapter
     private val viewModel: NewsViewModel by viewModel()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,11 +63,10 @@ class NewsFragment : Fragment(), NewsViewAdapter.OnNewsListener {
         viewModel.topHeadingsLiveData.observe(viewLifecycleOwner) {
             if (it.first) {
                 val newList = it.second.articles?.toMutableList() ?: mutableListOf()
-                val shimmers = mutableListOf(
-                    Article(isPlaceHolder = true),
-                    Article(isPlaceHolder = true),
-                )
-                newList.addAll(shimmers)
+                newList.add(Article(isPlaceHolder = true))
+                if (viewModel.searchSize == 0) {
+                    newList.add(Article(isPlaceHolder = true))
+                }
                 newViewAdapter.submitList(newList)
 
             } else {
@@ -74,6 +75,18 @@ class NewsFragment : Fragment(), NewsViewAdapter.OnNewsListener {
 
             }
 
+        }
+        binding.recycleView.addOnScrollListener(onScrollChangeListener)
+    }
+
+    private val onScrollChangeListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            val linearLayoutManager = binding.recycleView.layoutManager as LinearLayoutManager?
+            if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.searchSize - 1) {
+                Timber.e("onScrolled")
+                viewModel.getNews()
+            }
         }
     }
 

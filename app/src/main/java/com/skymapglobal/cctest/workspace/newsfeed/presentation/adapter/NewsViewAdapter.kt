@@ -15,7 +15,6 @@ import com.skymapglobal.cctest.databinding.ItemNewsFirstShimmerBinding
 import com.skymapglobal.cctest.databinding.ItemNewsShimmerBinding
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.Article
 import org.ocpsoft.prettytime.PrettyTime
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -33,13 +32,15 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
             val shimmerBinding =
                 ItemNewsShimmerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-
-            Timber.e("$viewType: ${getItem(viewType).isPlaceHolder}")
-            if(viewType == 0){
+            if (viewType == 0) {
                 val shimmerFirstBinding =
-                    ItemNewsFirstShimmerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                    ItemNewsFirstShimmerBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
 
-                return  NewsShimmerFirstViewHolder(shimmerFirstBinding/**/, parent.context)
+                return NewsShimmerFirstViewHolder(shimmerFirstBinding/**/, parent.context)
             }
             return NewsShimmerViewHolder(shimmerBinding, parent.context)
         }
@@ -92,10 +93,9 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
             }
             val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ROOT)
             val prettyTime = PrettyTime(Locale.ENGLISH)
-            val ago = prettyTime.format(format.parse(item.publishedAt!!))
-            binding.info.apply {
-                text = "$ago | ${item.source?.name}"
-            }
+            val info =
+                prettyTime.format(format.parse(item.publishedAt!!)) + " | " + item.source?.name
+            binding.info.text = info
         }
     }
 
