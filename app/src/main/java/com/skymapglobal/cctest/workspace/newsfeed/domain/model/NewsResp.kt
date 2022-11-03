@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class NewsResp(
-    val totalResults: Long,
+    val totalResults: Int,
     val articles: List<Article>?
 ) : Parcelable
 

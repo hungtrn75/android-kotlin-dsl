@@ -9,7 +9,7 @@ import com.skymapglobal.cctest.workspace.newsfeed.domain.model.Source
 
 data class NewsRespDto(
     val status: String? = null,
-    val totalResults: Long? = null,
+    val totalResults: Int? = null,
     val articles: List<ArticleDto>? = null
 ) {
     fun toJson() = mapper.writeValueAsString(this)

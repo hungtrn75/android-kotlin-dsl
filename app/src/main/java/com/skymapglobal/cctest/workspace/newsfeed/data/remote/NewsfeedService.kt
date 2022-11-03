@@ -11,6 +11,7 @@ interface NewsfeedService {
         @Query("page") page: Int,
         @Query("category") category: String,
         @Query("apiKey") apiKey: String = Constants.newsApiKey,
+        @Query("language") language: String = Constants.language,
     ): NewsRespDto
 
     @GET(Constants.everything)
