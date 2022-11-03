@@ -45,7 +45,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="7.5dp"
             android:src="@drawable/ic_baseline_share_24" />
 
 
