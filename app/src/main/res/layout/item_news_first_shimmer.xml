@@ -7,13 +7,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingVertical="5dp">
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+
+            android:background="@color/colorShimmer" />
 
         <View
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="10dp"
             android:background="@color/colorShimmer" />
 
         <View
@@ -44,12 +50,6 @@
             android:layout_marginTop="2.5dp"
             android:background="@color/colorShimmer" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="170dp"
-            android:layout_marginHorizontal="15dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorShimmer" />
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"

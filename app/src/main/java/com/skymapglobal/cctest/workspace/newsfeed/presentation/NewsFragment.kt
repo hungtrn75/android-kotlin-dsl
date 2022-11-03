@@ -56,7 +56,20 @@ class NewsFragment : Fragment(), NewsViewAdapter.OnNewsListener {
 
     private fun settingListeners() {
         viewModel.topHeadingsLiveData.observe(viewLifecycleOwner) {
-            newViewAdapter.submitList(it.articles)
+            if (it.first) {
+                val newList = it.second.articles?.toMutableList() ?: mutableListOf()
+                val shimmers = mutableListOf(
+                    Article(isPlaceHolder = true),
+                    Article(isPlaceHolder = true),
+                )
+                newList.addAll(shimmers)
+                newViewAdapter.submitList(newList)
+
+            } else {
+                newViewAdapter.submitList(it.second.articles)
+
+            }
+
         }
     }
 
