@@ -1,14 +1,19 @@
 package com.skymapglobal.cctest.workspace.newsfeed.presentation.adapter
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
+import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.ShimmerDrawable
+import com.skymapglobal.cctest.R
 import com.skymapglobal.cctest.databinding.ItemNewsBinding
 import com.skymapglobal.cctest.databinding.ItemNewsFirstBinding
 import com.skymapglobal.cctest.databinding.ItemNewsFirstShimmerBinding
@@ -40,9 +45,9 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
                         false
                     )
 
-                return NewsShimmerFirstViewHolder(shimmerFirstBinding/**/, parent.context)
+                return NewsShimmerFirstViewHolder(shimmerFirstBinding/**/)
             }
-            return NewsShimmerViewHolder(shimmerBinding, parent.context)
+            return NewsShimmerViewHolder(shimmerBinding)
         }
         return when (viewType) {
             0 -> NewsFirstViewHolder(firstBinding, parent.context)
@@ -62,6 +67,25 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
     abstract inner class BaseViewHolder(private val binding: ViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
         abstract fun bind(item: Article, position: Int)
+        fun getShimmerDrawable(): ShimmerDrawable {
+            val shimmer = Shimmer.AlphaHighlightBuilder()
+                .setDuration(1800)
+                .setBaseAlpha(0.7f)
+                .setHighlightAlpha(0.6f)
+                .setDirection(Shimmer.Direction.LEFT_TO_RIGHT)
+                .setAutoStart(true)
+                .build()
+            return ShimmerDrawable().apply {
+                setShimmer(shimmer)
+            }
+        }
+
+        fun parseDateTime(dateTime: String): String {
+            val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH)
+            format.timeZone = TimeZone.getTimeZone("UTC")
+            val prettyTime = PrettyTime(Locale.ENGLISH)
+            return prettyTime.format(format.parse(dateTime))
+        }
     }
 
     inner class NewsViewHolder(private val binding: ItemNewsBinding, private val context: Context) :
@@ -75,9 +99,10 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
         }
 
         override fun bind(item: Article, position: Int) {
-
             if (item.urlToImage != null) {
-                Glide.with(context).load(item.urlToImage)
+                Glide.with(context)
+                    .load(item.urlToImage)
+                    .placeholder(getShimmerDrawable())
                     .centerCrop()
                     .into(binding.thumbnailBottom)
             } else {
@@ -91,10 +116,7 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
                 visibility = if (item.description == null) View.GONE else View.VISIBLE
                 text = item.description
             }
-            val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ROOT)
-            val prettyTime = PrettyTime(Locale.ENGLISH)
-            val info =
-                prettyTime.format(format.parse(item.publishedAt!!)) + " | " + item.source?.name
+            val info = "${parseDateTime(item.publishedAt!!)} | ${item.source?.name}"
             binding.info.text = info
         }
     }
@@ -115,13 +137,13 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
         override fun bind(item: Article, position: Int) {
             if (item.urlToImage != null) {
                 Glide.with(context).load(item.urlToImage)
+                    .placeholder(getShimmerDrawable())
+                    .error(ColorDrawable(ContextCompat.getColor(context, R.color.colorShimmer)))
                     .centerCrop()
                     .into(binding.thumbnailTop)
             } else {
                 binding.thumbnailTop.visibility = View.GONE
             }
-
-
             binding.title.apply {
                 visibility = if (item.title == null) View.GONE else View.VISIBLE
                 text = item.title
@@ -130,18 +152,13 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
                 visibility = if (item.description == null) View.GONE else View.VISIBLE
                 text = item.description
             }
-            val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ROOT)
-            val prettyTime = PrettyTime(Locale.ENGLISH)
-            val ago = prettyTime.format(format.parse(item.publishedAt!!))
-            binding.info.apply {
-                text = "$ago | ${item.source?.name}"
-            }
+            val info = "${parseDateTime(item.publishedAt!!)} | ${item.source?.name}"
+            binding.info.text = info
         }
     }
 
     inner class NewsShimmerViewHolder(
-        private val binding: ItemNewsShimmerBinding,
-        private val context: Context
+        binding: ItemNewsShimmerBinding
     ) :
         BaseViewHolder(binding) {
         override fun bind(item: Article, position: Int) {
@@ -151,8 +168,7 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
     }
 
     inner class NewsShimmerFirstViewHolder(
-        private val binding: ItemNewsFirstShimmerBinding,
-        private val context: Context
+        binding: ItemNewsFirstShimmerBinding
     ) :
         BaseViewHolder(binding) {
         override fun bind(item: Article, position: Int) {
@@ -167,9 +183,9 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
 
     class DiffCallback : DiffUtil.ItemCallback<Article>() {
         override fun areContentsTheSame(oldItem: Article, newItem: Article) =
-            oldItem == newItem && oldItem.isPlaceHolder == newItem.isPlaceHolder
+            oldItem == newItem
 
         override fun areItemsTheSame(oldItem: Article, newItem: Article) =
-            oldItem == newItem && oldItem.isPlaceHolder == newItem.isPlaceHolder
+            oldItem == newItem
     }
 }
