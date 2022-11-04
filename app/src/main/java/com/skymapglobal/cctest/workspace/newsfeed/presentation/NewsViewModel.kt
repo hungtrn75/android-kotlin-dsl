@@ -11,7 +11,6 @@ import com.skymapglobal.cctest.workspace.newsfeed.domain.model.NewsfeedQuery
 import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.GetTopHeadingsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -37,8 +36,22 @@ class NewsViewModel constructor(private val getTopHeadingsUseCase: GetTopHeading
         }
     }
 
+    fun retry() = viewModelScope.launch {
+        Timber.e("Retry")
+        if (searchSize == 1) {
+            getNews(refresh = true)
+        } else {
+            val previousArticles =
+                _topHeadingsFlow.value.articles?.toMutableList() ?: mutableListOf()
+            previousArticles.removeLast()
+            _topHeadingsFlow.emit(_topHeadingsFlow.value.copy(articles = previousArticles.toMutableList()))
+            getNews()
+        }
+    }
+
     /* pull to refresh -> refresh: true */
     fun getNews(refresh: Boolean = false) = viewModelScope.launch(Dispatchers.IO) {
+        Timber.e("getNews: $category")
         if (_searching || searchSize >= _topHeadingsFlow.value.totalResults) return@launch
         _searching = true
         val previousArticles = _topHeadingsFlow.value.articles?.toMutableList() ?: mutableListOf()

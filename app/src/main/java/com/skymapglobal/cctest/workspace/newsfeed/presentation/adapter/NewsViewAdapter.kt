@@ -14,10 +14,7 @@ import com.bumptech.glide.Glide
 import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerDrawable
 import com.skymapglobal.cctest.R
-import com.skymapglobal.cctest.databinding.ItemNewsBinding
-import com.skymapglobal.cctest.databinding.ItemNewsFirstBinding
-import com.skymapglobal.cctest.databinding.ItemNewsFirstShimmerBinding
-import com.skymapglobal.cctest.databinding.ItemNewsShimmerBinding
+import com.skymapglobal.cctest.databinding.*
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.Article
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.ArticlePlaceholder
 import org.ocpsoft.prettytime.PrettyTime
@@ -30,9 +27,7 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
         parent: ViewGroup,
         viewType: Int
     ): NewsViewAdapter.BaseViewHolder {
-        val binding = ItemNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        val firstBinding =
-            ItemNewsFirstBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
 
         return when (getItem(viewType).placeholder) {
             ArticlePlaceholder.Loading -> {
@@ -53,9 +48,25 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
                     )
                 NewsShimmerFirstViewHolder(shimmerFirstBinding)
             }
+            is ArticlePlaceholder.Error -> {
+                val errorBinding =
+                    ItemNewsRetryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                NewsErrorViewHolder(errorBinding)
+            }
             else -> {
-                if (viewType == 0) NewsFirstViewHolder(firstBinding, parent.context)
-                else NewsViewHolder(binding, parent.context)
+                if (viewType == 0) {
+                    val firstBinding =
+                        ItemNewsFirstBinding.inflate(
+                            LayoutInflater.from(parent.context),
+                            parent,
+                            false
+                        )
+                    NewsFirstViewHolder(firstBinding, parent.context)
+                } else {
+                    val binding =
+                        ItemNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                    NewsViewHolder(binding, parent.context)
+                }
             }
         }
     }
@@ -100,6 +111,7 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
                 listener.onNewsClick(getItem(bindingAdapterPosition))
             }
             binding.shareBtn.setOnClickListener {
+                listener.onShare(getItem(bindingAdapterPosition))
             }
         }
 
@@ -137,6 +149,7 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
                 listener.onNewsClick(getItem(bindingAdapterPosition))
             }
             binding.shareBtn.setOnClickListener {
+                listener.onShare(getItem(bindingAdapterPosition))
             }
         }
 
@@ -184,8 +197,28 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
 
     }
 
+    inner class NewsErrorViewHolder(
+        private val binding: ItemNewsRetryBinding
+    ) :
+        BaseViewHolder(binding) {
+        init {
+            binding.retryBtn.setOnClickListener {
+                listener.onRetryClick()
+            }
+        }
+
+        override fun bind(item: Article, position: Int) {
+            binding.apply {
+                error.text = (item.placeholder as ArticlePlaceholder.Error).error
+            }
+        }
+
+    }
+
     interface OnNewsListener {
         fun onNewsClick(item: Article)
+        fun onRetryClick()
+        fun onShare(item: Article)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Article>() {

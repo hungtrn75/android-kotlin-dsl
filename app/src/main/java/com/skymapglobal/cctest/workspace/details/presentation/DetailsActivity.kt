@@ -69,11 +69,11 @@ class DetailsActivity : AppCompatActivity() {
     private fun settingListeners() {
         binding.apply {
             switchBtn.setOnClickListener {
-                lifecycleScope.launch {
-                    viewModel.setDarkMode(!viewModel.getDarkMode())
-                    setDarkMode()
-                }
-
+                binding.webView.settings.textZoom = 2
+//                lifecycleScope.launch {
+//                    viewModel.setDarkMode(!viewModel.getDarkMode())
+//                    setDarkMode()
+//                }
             }
         }
     }

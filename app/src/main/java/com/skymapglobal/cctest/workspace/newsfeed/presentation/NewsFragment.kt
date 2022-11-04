@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ShareCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,19 +13,20 @@ import com.skymapglobal.cctest.databinding.FragmentNewsBinding
 import com.skymapglobal.cctest.workspace.details.presentation.DetailsActivity
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.Article
 import com.skymapglobal.cctest.workspace.newsfeed.presentation.adapter.NewsViewAdapter
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 private const val CATEGORY = "category"
 
-class NewsFragment : Fragment(), NewsViewAdapter.OnNewsListener {
+class NewsFragment() : Fragment(),
+    NewsViewAdapter.OnNewsListener {
     private var category: String? = null
+    private lateinit var viewModel: NewsViewModel
     private lateinit var binding: FragmentNewsBinding
     private lateinit var newViewAdapter: NewsViewAdapter
-    private val viewModel: NewsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Timber.e("onCreate")
         arguments?.let {
             category = it.getString(CATEGORY)
             viewModel.inject(category!!)
@@ -42,6 +44,11 @@ class NewsFragment : Fragment(), NewsViewAdapter.OnNewsListener {
         settingListeners()
         viewModel.refreshNews()
         return binding.root
+    }
+
+    fun injectViewModel(viewModel: NewsViewModel) {
+        Timber.e("injectViewModel: $viewModel")
+        this.viewModel = viewModel
     }
 
     private fun settingViews() {
@@ -68,20 +75,11 @@ class NewsFragment : Fragment(), NewsViewAdapter.OnNewsListener {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
             val linearLayoutManager = binding.recycleView.layoutManager as LinearLayoutManager?
-            if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.searchSize - 1) {
+
+            if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() > 0 && linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.searchSize - 1) {
                 viewModel.getNews()
             }
         }
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(category: String) =
-            NewsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(CATEGORY, category)
-                }
-            }
     }
 
     override fun onNewsClick(item: Article) {
@@ -89,4 +87,29 @@ class NewsFragment : Fragment(), NewsViewAdapter.OnNewsListener {
         intent.putExtra(DetailsActivity.article, item)
         startActivity(intent)
     }
+
+    override fun onRetryClick() {
+        viewModel.retry()
+    }
+
+    override fun onShare(item: Article) {
+        ShareCompat.IntentBuilder(requireContext())
+            .setType("text/plain")
+            .setChooserTitle(item.title)
+            .setText(item.url)
+            .startChooser()
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(category: String, newsViewModel: NewsViewModel) =
+            NewsFragment().apply {
+                arguments = Bundle().apply {
+                    putString(CATEGORY, category)
+                }
+                injectViewModel(newsViewModel)
+            }
+    }
+
+
 }
