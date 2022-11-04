@@ -1,7 +1,5 @@
 package com.skymapglobal.cctest.workspace.newsfeed.data.dto
 
-import com.fasterxml.jackson.module.kotlin.readValue
-import com.skymapglobal.cctest.core.util.mapper
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.Article
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.NewsResp
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.Source
@@ -11,13 +9,7 @@ data class NewsRespDto(
     val status: String? = null,
     val totalResults: Int? = null,
     val articles: List<ArticleDto>? = null
-) {
-    fun toJson() = mapper.writeValueAsString(this)
-
-    companion object {
-        fun fromJson(json: String) = mapper.readValue<NewsResp>(json)
-    }
-}
+)
 
 data class ArticleDto(
     val source: SourceDto? = null,
@@ -36,7 +28,7 @@ data class SourceDto(
 )
 
 
-fun SourceDto.mapper() = Source(id = id, name = name!!)
+fun SourceDto.mapper() = Source(name = name)
 
 fun ArticleDto.mapper() = Article(
     source = source?.mapper(),
@@ -46,7 +38,6 @@ fun ArticleDto.mapper() = Article(
     url = url,
     urlToImage = urlToImage,
     publishedAt = publishedAt,
-    content = content,
 )
 
 fun NewsRespDto.mapper() =

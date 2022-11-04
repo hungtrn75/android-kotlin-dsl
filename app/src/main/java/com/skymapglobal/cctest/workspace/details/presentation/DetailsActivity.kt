@@ -1,8 +1,6 @@
 package com.skymapglobal.cctest.workspace.details.presentation
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -51,28 +49,27 @@ class DetailsActivity : AppCompatActivity() {
         val articleExtra = intent.getParcelableExtra<Article>(article)
         if (articleExtra != null) {
             binding.appBar.title = articleExtra.title
-
-                if (savedInstanceState == null) {
-                    binding.webView.apply {
-                        webChromeClient = object : WebChromeClient() {
-                            override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                                super.onProgressChanged(view, newProgress)
-                                if (progress == 100) {
-                                    binding.indicator.visibility = View.GONE
-                                } else {
-                                    binding.indicator.apply {
-                                        visibility = View.VISIBLE
-                                        progress = newProgress
-                                    }
+            if (savedInstanceState == null) {
+                binding.webView.apply {
+                    webChromeClient = object : WebChromeClient() {
+                        override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                            super.onProgressChanged(view, newProgress)
+                            if (progress == 100) {
+                                binding.indicator.visibility = View.GONE
+                            } else {
+                                binding.indicator.apply {
+                                    visibility = View.VISIBLE
+                                    progress = newProgress
                                 }
                             }
                         }
-                        webViewClient = WebViewClient()
-                        settings.javaScriptEnabled = true
-                        settings.setSupportZoom(false)
-                        loadUrl(articleExtra.url!!)
                     }
+                    webViewClient = WebViewClient()
+                    settings.javaScriptEnabled = true
+                    settings.setSupportZoom(false)
+                    loadUrl(articleExtra.url!!)
                 }
+            }
             lifecycleScope.launch {
                 binding.switchBtn.apply {
                     isChecked = viewModel.getDarkMode()

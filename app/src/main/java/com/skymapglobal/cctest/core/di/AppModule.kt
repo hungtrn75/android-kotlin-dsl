@@ -14,7 +14,6 @@ import com.skymapglobal.cctest.workspace.newsfeed.data.remote.NewsfeedService
 import com.skymapglobal.cctest.workspace.newsfeed.data.repository.NewsfeedRepoImpl
 import com.skymapglobal.cctest.workspace.newsfeed.domain.repository.NewsfeedRepo
 import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.GetDarkModeSettingUseCase
-import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.GetNewsUseCase
 import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.GetTopHeadingsUseCase
 import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.SetDarkModeSettingUseCase
 import com.skymapglobal.cctest.workspace.newsfeed.presentation.NewsViewModel
@@ -26,6 +25,10 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
 import java.util.concurrent.TimeUnit
+
+val helperModule = module {
+    factory { CoroutineScope(Dispatchers.IO) }
+}
 
 val retrofitModule = module {
     fun provideInterceptor(context: Context): AppInterceptor {
@@ -66,7 +69,6 @@ val serviceModule = module {
     single {
         provideSharedPreferences(get())
     }
-    factory { CoroutineScope(Dispatchers.IO) }
 }
 
 val dataSourceModule = module {
@@ -89,9 +91,6 @@ val useCaseModule = module {
         GetTopHeadingsUseCase(get())
     }
     single {
-        GetNewsUseCase(get())
-    }
-    single {
         GetDarkModeSettingUseCase(get())
     }
     single {
@@ -109,5 +108,4 @@ val viewModelModule = module {
     viewModel {
         DetailsViewModel(get(), get())
     }
-
 }

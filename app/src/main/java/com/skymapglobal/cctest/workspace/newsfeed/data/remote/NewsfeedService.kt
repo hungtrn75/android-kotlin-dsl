@@ -14,11 +14,4 @@ interface NewsfeedService {
         @Query("language") language: String = Constants.language,
     ): NewsRespDto
 
-    @GET(Constants.everything)
-    suspend fun everything(
-        @Query("pageSize") pageSize: Int = Constants.pageSize,
-        @Query("page") page: Int,
-        @Query("q") q: String? = null,
-        @Query("apiKey") apiKey: String = Constants.newsApiKey,
-    ): NewsRespDto
 }

@@ -8,7 +8,6 @@ import java.net.SocketException
 
 object NetworkError {
     fun handleException(e: Exception): String {
-        Timber.e(e.stackTraceToString())
         return when (e) {
             is ConnectException -> "Không có kết nối mạng"
             is HttpException -> {

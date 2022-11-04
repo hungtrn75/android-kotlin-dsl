@@ -3,7 +3,6 @@ package com.skymapglobal.cctest.core.util
 import android.content.Context
 import okhttp3.Interceptor
 import okhttp3.Response
-import timber.log.Timber
 
 class AppInterceptor(val context: Context) : Interceptor {
     companion object {
@@ -15,7 +14,6 @@ class AppInterceptor(val context: Context) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()
-        Timber.e("${chain.request().url()} deviceId: $deviceId, deviceName: $deviceName")
         requestBuilder.addHeader("Authorization", "Bearer $token")
         requestBuilder.addHeader("DeviceId", deviceId)
         requestBuilder.addHeader("DeviceName", deviceName)

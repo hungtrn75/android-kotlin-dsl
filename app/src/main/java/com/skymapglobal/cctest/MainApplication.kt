@@ -19,6 +19,7 @@ class MainApplication : Application() {
             androidContext(this@MainApplication)
             modules(
                 listOf(
+                    helperModule,
                     retrofitModule,
                     serviceModule,
                     dataSourceModule,

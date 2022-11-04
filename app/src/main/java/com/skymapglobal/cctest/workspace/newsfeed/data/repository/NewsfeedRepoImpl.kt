@@ -20,13 +20,6 @@ class NewsfeedRepoImpl constructor(
         Either.Left(NetworkError.handleException(e))
     }
 
-    override suspend fun everything(page: Int, category: String): Either<String, NewsResp> = try {
-        val resp = newsfeedRemoteDataSource.everything(page, category).mapper()
-        Either.Right(resp)
-    } catch (e: Exception) {
-        Either.Left(NetworkError.handleException(e))
-    }
-
     override suspend fun setDarkModeSetting(mode: Boolean) =
         newsfeedLocalDataSource.storeDarkModeSetting(mode)
 

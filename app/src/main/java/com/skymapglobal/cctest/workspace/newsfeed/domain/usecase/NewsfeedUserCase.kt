@@ -13,13 +13,8 @@ class GetTopHeadingsUseCase constructor(private val newsfeedRepo: NewsfeedRepo) 
         newsfeedRepo.topHeadLines(params.page, params.category)
 }
 
-class GetNewsUseCase constructor(private val newsfeedRepo: NewsfeedRepo) :
-    UseCase<Either<String, NewsResp>, NewsfeedQuery>() {
-    override suspend fun execute(params: NewsfeedQuery) =
-        newsfeedRepo.everything(params.page, params.category)
-}
-
-class GetDarkModeSettingUseCase (private val newsfeedRepo: NewsfeedRepo) : NoParamsUseCase<Boolean>(){
+class GetDarkModeSettingUseCase(private val newsfeedRepo: NewsfeedRepo) :
+    NoParamsUseCase<Boolean>() {
     override suspend fun execute(): Boolean = newsfeedRepo.getDarkModeSetting()
 }
 

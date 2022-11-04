@@ -18,13 +18,11 @@ data class Article(
     val url: String? = null,
     val urlToImage: String? = null,
     val publishedAt: String? = null,
-    val content: String? = null,
     val placeholder: ArticlePlaceholder? = ArticlePlaceholder.Article,
 ) : Parcelable
 
 @Parcelize
 data class Source(
-    val id: String?,
     val name: String?
 ) : Parcelable
 
