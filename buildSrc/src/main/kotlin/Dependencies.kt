@@ -27,4 +27,11 @@ object Dependencies {
     const val webkit = "androidx.webkit:webkit:${Versions.webkit}"
     const val androidxLivedata = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
     const val androidxViewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
+    const val viewpager2 = "androidx.viewpager2:viewpager2:${Versions.viewpager2}"
+    const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
+    const val glideComplier = "com.github.bumptech.glide:compiler:${Versions.glide}"
+    const val shimmer = "com.facebook.shimmer:shimmer:${Versions.shimmer}"
+    const val prettyTime = "org.ocpsoft.prettytime:prettytime:${Versions.prettyTime}"
+    const val swipeRefreshLayout =
+        "androidx.swiperefreshlayout:swiperefreshlayout:${Versions.swipeRefreshLayout}"
 }

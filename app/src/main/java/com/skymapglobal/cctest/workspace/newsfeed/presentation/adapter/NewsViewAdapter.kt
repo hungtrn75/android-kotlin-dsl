@@ -27,8 +27,6 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
         parent: ViewGroup,
         viewType: Int
     ): NewsViewAdapter.BaseViewHolder {
-
-
         return when (getItem(viewType).placeholder) {
             ArticlePlaceholder.Loading -> {
                 val shimmerBinding =

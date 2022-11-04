@@ -1,6 +1,7 @@
 package com.skymapglobal.cctest.workspace.newsfeed.presentation
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,20 +14,19 @@ import com.skymapglobal.cctest.databinding.FragmentNewsBinding
 import com.skymapglobal.cctest.workspace.details.presentation.DetailsActivity
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.Article
 import com.skymapglobal.cctest.workspace.newsfeed.presentation.adapter.NewsViewAdapter
-import timber.log.Timber
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-private const val CATEGORY = "category"
 
 class NewsFragment() : Fragment(),
     NewsViewAdapter.OnNewsListener {
     private var category: String? = null
-    private lateinit var viewModel: NewsViewModel
+    private val viewModel: NewsViewModel by viewModel()
     private lateinit var binding: FragmentNewsBinding
     private lateinit var newViewAdapter: NewsViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.e("onCreate")
+
         arguments?.let {
             category = it.getString(CATEGORY)
             viewModel.inject(category!!)
@@ -44,11 +44,6 @@ class NewsFragment() : Fragment(),
         settingListeners()
         viewModel.refreshNews()
         return binding.root
-    }
-
-    fun injectViewModel(viewModel: NewsViewModel) {
-        Timber.e("injectViewModel: $viewModel")
-        this.viewModel = viewModel
     }
 
     private fun settingViews() {
@@ -83,9 +78,13 @@ class NewsFragment() : Fragment(),
     }
 
     override fun onNewsClick(item: Article) {
-        val intent = Intent(context, DetailsActivity::class.java)
-        intent.putExtra(DetailsActivity.article, item)
-        startActivity(intent)
+        if (item.url!!.contains("youtube")) {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(item.url)))
+        } else {
+            val intent = Intent(context, DetailsActivity::class.java)
+            intent.putExtra(DetailsActivity.article, item)
+            startActivity(intent)
+        }
     }
 
     override fun onRetryClick() {
@@ -101,15 +100,14 @@ class NewsFragment() : Fragment(),
     }
 
     companion object {
+        const val CATEGORY = "category"
+
         @JvmStatic
-        fun newInstance(category: String, newsViewModel: NewsViewModel) =
+        fun newInstance(category: String) =
             NewsFragment().apply {
                 arguments = Bundle().apply {
                     putString(CATEGORY, category)
                 }
-                injectViewModel(newsViewModel)
             }
     }
-
-
 }

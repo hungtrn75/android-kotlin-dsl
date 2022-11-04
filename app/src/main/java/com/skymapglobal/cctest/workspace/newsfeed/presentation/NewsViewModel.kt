@@ -2,28 +2,33 @@ package com.skymapglobal.cctest.workspace.newsfeed.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
 import com.skymapglobal.cctest.core.util.Constants
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.Article
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.ArticlePlaceholder
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.NewsResp
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.NewsfeedQuery
 import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.GetTopHeadingsUseCase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
-class NewsViewModel constructor(private val getTopHeadingsUseCase: GetTopHeadingsUseCase) :
+/*
+* use coroutineScope instead of viewModelScope to memo tabs
+* */
+class NewsViewModel constructor(
+    private val getTopHeadingsUseCase: GetTopHeadingsUseCase,
+    private val coroutineScope: CoroutineScope
+) :
     ViewModel() {
     lateinit var category: String
-
     private var _searching = false
+
     private val _topHeadingsFlow =
         MutableStateFlow(NewsResp(totalResults = Int.MAX_VALUE, articles = mutableListOf()))
-
     val topHeadingsLiveData = _topHeadingsFlow.asLiveData()
+
     val searchSize: Int get() = _topHeadingsFlow.value.articles?.size ?: 0
 
     fun inject(category: String) {
@@ -36,8 +41,7 @@ class NewsViewModel constructor(private val getTopHeadingsUseCase: GetTopHeading
         }
     }
 
-    fun retry() = viewModelScope.launch {
-        Timber.e("Retry")
+    fun retry() = coroutineScope.launch {
         if (searchSize == 1) {
             getNews(refresh = true)
         } else {
@@ -50,53 +54,54 @@ class NewsViewModel constructor(private val getTopHeadingsUseCase: GetTopHeading
     }
 
     /* pull to refresh -> refresh: true */
-    fun getNews(refresh: Boolean = false) = viewModelScope.launch(Dispatchers.IO) {
-        Timber.e("getNews: $category")
-        if (_searching || searchSize >= _topHeadingsFlow.value.totalResults) return@launch
-        _searching = true
-        val previousArticles = _topHeadingsFlow.value.articles?.toMutableList() ?: mutableListOf()
+    fun getNews(refresh: Boolean = false) {
+        coroutineScope.launch(Dispatchers.IO) {
+            if (_searching || searchSize >= _topHeadingsFlow.value.totalResults) return@launch
+            _searching = true
+            val previousArticles = if (refresh) mutableListOf() else
+                _topHeadingsFlow.value.articles?.toMutableList() ?: mutableListOf()
 
-        withContext(Dispatchers.Main) {
-            if (refresh) {
-                previousArticles.addAll(
-                    mutableListOf(
-                        Article(placeholder = ArticlePlaceholder.FistPageLoading),
-                        Article(placeholder = ArticlePlaceholder.Loading),
+            withContext(Dispatchers.Main) {
+                if (refresh) {
+                    previousArticles.addAll(
+                        mutableListOf(
+                            Article(placeholder = ArticlePlaceholder.FistPageLoading),
+                            Article(placeholder = ArticlePlaceholder.Loading),
+                        )
                     )
-                )
-                _topHeadingsFlow.emit(
-                    NewsResp(
-                        totalResults = Int.MAX_VALUE,
-                        articles = previousArticles.toMutableList()
+                    _topHeadingsFlow.emit(
+                        NewsResp(
+                            totalResults = Int.MAX_VALUE,
+                            articles = previousArticles.toMutableList()
+                        )
                     )
-                )
-            } else {
-                previousArticles.add(Article(placeholder = ArticlePlaceholder.Loading))
-                _topHeadingsFlow.emit(_topHeadingsFlow.value.copy(articles = previousArticles.toMutableList()))
+                } else {
+                    previousArticles.add(Article(placeholder = ArticlePlaceholder.Loading))
+                    _topHeadingsFlow.emit(_topHeadingsFlow.value.copy(articles = previousArticles.toMutableList()))
+                }
             }
-        }
 
 
-        val resp = getTopHeadingsUseCase.execute(
-            NewsfeedQuery(
-                page = if (refresh) 1 else (previousArticles.size / Constants.pageSize) + 1,
-                category = category
+            val resp = getTopHeadingsUseCase.execute(
+                NewsfeedQuery(
+                    page = if (refresh) 1 else (previousArticles.size / Constants.pageSize) + 1,
+                    category = category
+                )
             )
-        )
-        previousArticles.removeLast()
-        if (refresh) previousArticles.removeLast()
-        resp.fold({ error ->
-            Timber.e("getNews: $error")
-            previousArticles.add(Article(placeholder = ArticlePlaceholder.Error(error)))
-            withContext(Dispatchers.Main) {
-                _topHeadingsFlow.emit(_topHeadingsFlow.value.copy(articles = previousArticles.toMutableList()))
-                _searching = false
-            }
-        }) { newsReps ->
-            previousArticles.addAll(newsReps.articles ?: mutableListOf())
-            withContext(Dispatchers.Main) {
-                _topHeadingsFlow.emit(newsReps.copy(articles = previousArticles.toMutableList()))
-                _searching = false
+            previousArticles.removeLast()
+            if (refresh) previousArticles.removeLast()
+            resp.fold({ error ->
+                previousArticles.add(Article(placeholder = ArticlePlaceholder.Error(error)))
+                withContext(Dispatchers.Main) {
+                    _topHeadingsFlow.emit(_topHeadingsFlow.value.copy(articles = previousArticles.toMutableList()))
+                    _searching = false
+                }
+            }) { newsReps ->
+                previousArticles.addAll(newsReps.articles ?: mutableListOf())
+                withContext(Dispatchers.Main) {
+                    _topHeadingsFlow.emit(newsReps.copy(articles = previousArticles.toMutableList()))
+                    _searching = false
+                }
             }
         }
     }

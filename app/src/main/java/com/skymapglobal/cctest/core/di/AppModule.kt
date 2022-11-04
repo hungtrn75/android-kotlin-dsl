@@ -18,6 +18,8 @@ import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.GetNewsUseCase
 import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.GetTopHeadingsUseCase
 import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.SetDarkModeSettingUseCase
 import com.skymapglobal.cctest.workspace.newsfeed.presentation.NewsViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -64,6 +66,7 @@ val serviceModule = module {
     single {
         provideSharedPreferences(get())
     }
+    factory { CoroutineScope(Dispatchers.IO) }
 }
 
 val dataSourceModule = module {
@@ -101,7 +104,7 @@ val viewModelModule = module {
         MainViewModel(get(), get())
     }
     viewModel {
-        NewsViewModel(get())
+        NewsViewModel(get(), get())
     }
     viewModel {
         DetailsViewModel(get(), get())

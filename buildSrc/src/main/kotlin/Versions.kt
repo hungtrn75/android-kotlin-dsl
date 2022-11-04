@@ -19,4 +19,9 @@ object Versions {
     const val jackson = "2.9.0"
     const val jacksonKotlin = "2.13.4"
     const val webkit = "1.5.0"
+    const val viewpager2 = "1.1.0-beta01"
+    const val glide = "4.12.0"
+    const val shimmer = "0.5.0"
+    const val prettyTime = "5.0.4.Final"
+    const val swipeRefreshLayout = "1.1.0"
 }

@@ -1,9 +1,13 @@
 package com.skymapglobal.cctest.workspace.details.presentation
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.view.View
+import android.webkit.WebChromeClient
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -14,7 +18,7 @@ import com.skymapglobal.cctest.databinding.ActivityDetailsBinding
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.Article
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
+
 
 class DetailsActivity : AppCompatActivity() {
     companion object {
@@ -47,14 +51,28 @@ class DetailsActivity : AppCompatActivity() {
         val articleExtra = intent.getParcelableExtra<Article>(article)
         if (articleExtra != null) {
             binding.appBar.title = articleExtra.title
-            if (savedInstanceState == null) {
-                binding.webView.apply {
-                    webViewClient = WebViewClient()
-                    settings.javaScriptEnabled = true
-                    settings.setSupportZoom(false)
-                    loadUrl(articleExtra.url!!)
+
+                if (savedInstanceState == null) {
+                    binding.webView.apply {
+                        webChromeClient = object : WebChromeClient() {
+                            override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                                super.onProgressChanged(view, newProgress)
+                                if (progress == 100) {
+                                    binding.indicator.visibility = View.GONE
+                                } else {
+                                    binding.indicator.apply {
+                                        visibility = View.VISIBLE
+                                        progress = newProgress
+                                    }
+                                }
+                            }
+                        }
+                        webViewClient = WebViewClient()
+                        settings.javaScriptEnabled = true
+                        settings.setSupportZoom(false)
+                        loadUrl(articleExtra.url!!)
+                    }
                 }
-            }
             lifecycleScope.launch {
                 binding.switchBtn.apply {
                     isChecked = viewModel.getDarkMode()
@@ -62,18 +80,20 @@ class DetailsActivity : AppCompatActivity() {
                 }
             }
         }
-
         setSupportActionBar(binding.appBar)
+
     }
 
     private fun settingListeners() {
         binding.apply {
             switchBtn.setOnClickListener {
-                binding.webView.settings.textZoom = 2
-//                lifecycleScope.launch {
-//                    viewModel.setDarkMode(!viewModel.getDarkMode())
-//                    setDarkMode()
-//                }
+                lifecycleScope.launch {
+                    viewModel.setDarkMode(!viewModel.getDarkMode())
+                    setDarkMode()
+                }
+            }
+            appBar.setNavigationOnClickListener {
+                onBackPressed()
             }
         }
     }
@@ -87,7 +107,6 @@ class DetailsActivity : AppCompatActivity() {
                 }
             } else {
                 if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-                    Timber.e("setForceDark: $mode")
                     @Suppress("DEPRECATION")
                     setForceDark(
                         binding.webView.settings,

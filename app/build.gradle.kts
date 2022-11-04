@@ -52,7 +52,7 @@ dependencies {
     implementation(Dependencies.koinAndroid)
     // FP
     implementation(Dependencies.arrow)
-    //
+    // Android
     implementation(Dependencies.androidxCoreKtx)
     implementation(Dependencies.androidxAppCompat)
     implementation(Dependencies.googleMaterialDesign)
@@ -61,20 +61,24 @@ dependencies {
     implementation(Dependencies.androidxNavigationUiKtx)
     implementation(Dependencies.androidxLivedata)
     implementation(Dependencies.androidxViewModel)
+    // Webkit
     implementation(Dependencies.webkit)
     // Retrofit
     implementation(Dependencies.retrofit)
     implementation(Dependencies.jackson)
     implementation(Dependencies.jacksonKotlin)
     // ViewPager2
-    implementation("androidx.viewpager2:viewpager2:1.1.0-beta01")
+    implementation(Dependencies.viewpager2)
     // Glide
-    implementation("com.github.bumptech.glide:glide:4.12.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
-    implementation("com.facebook.shimmer:shimmer:0.5.0")
-    implementation("org.ocpsoft.prettytime:prettytime:5.0.4.Final")
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
-
+    implementation(Dependencies.glide)
+    annotationProcessor(Dependencies.glideComplier)
+    // Shimmer
+    implementation(Dependencies.shimmer)
+    // PrettyTime
+    implementation(Dependencies.prettyTime)
+    // Swipe Layout
+    implementation(Dependencies.swipeRefreshLayout)
+    // Other
     testImplementation(Dependencies.jUnit)
     androidTestImplementation(Dependencies.androidxTestJUnit)
     androidTestImplementation(Dependencies.androidxTestEspresso)
