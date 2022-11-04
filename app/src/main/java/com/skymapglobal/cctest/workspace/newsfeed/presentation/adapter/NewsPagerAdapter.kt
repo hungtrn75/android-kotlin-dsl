@@ -5,7 +5,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.skymapglobal.cctest.workspace.main.presentation.MainActivity
 import com.skymapglobal.cctest.workspace.newsfeed.presentation.NewsFragment
-import timber.log.Timber
 
 
 class NewsPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
@@ -17,14 +16,12 @@ class NewsPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
     * Memo activated tabs
     * */
     override fun createFragment(position: Int): Fragment {
-        if (memoFragments.containsKey(position)) {
-            return memoFragments[position]!!;
-        }
-        memoFragments[position] =
-            NewsFragment.newInstance(
-                category = MainActivity.categories[position],
-
+        if (!memoFragments.containsKey(position)) {
+            memoFragments[position] =
+                NewsFragment.newInstance(
+                    category = MainActivity.categories[position]
                 )
+        }
         return memoFragments[position]!!
     }
 }
