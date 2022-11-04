@@ -13,7 +13,6 @@ import com.skymapglobal.cctest.workspace.details.presentation.DetailsActivity
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.Article
 import com.skymapglobal.cctest.workspace.newsfeed.presentation.adapter.NewsViewAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 private const val CATEGORY = "category"
 
@@ -22,7 +21,6 @@ class NewsFragment : Fragment(), NewsViewAdapter.OnNewsListener {
     private lateinit var binding: FragmentNewsBinding
     private lateinit var newViewAdapter: NewsViewAdapter
     private val viewModel: NewsViewModel by viewModel()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,17 +58,8 @@ class NewsFragment : Fragment(), NewsViewAdapter.OnNewsListener {
 
     private fun settingListeners() {
         viewModel.topHeadingsLiveData.observe(viewLifecycleOwner) {
-            if (it.first) {
-                val newList = it.second.articles?.toMutableList() ?: mutableListOf()
-                if (viewModel.searchSize == 0) {
-                    newList.add(Article(isPlaceHolder = true))
-                }
-                newList.add(Article(isPlaceHolder = true))
-                newViewAdapter.submitList(newList)
-            } else {
-                binding.swipeContainer.isRefreshing = false
-                newViewAdapter.submitList(it.second.articles)
-            }
+            binding.swipeContainer.isRefreshing = false
+            newViewAdapter.submitList(it.articles)
         }
         binding.recycleView.addOnScrollListener(onScrollChangeListener)
     }
@@ -80,7 +69,6 @@ class NewsFragment : Fragment(), NewsViewAdapter.OnNewsListener {
             super.onScrolled(recyclerView, dx, dy)
             val linearLayoutManager = binding.recycleView.layoutManager as LinearLayoutManager?
             if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == viewModel.searchSize - 1) {
-                Timber.e("onScrolled")
                 viewModel.getNews()
             }
         }

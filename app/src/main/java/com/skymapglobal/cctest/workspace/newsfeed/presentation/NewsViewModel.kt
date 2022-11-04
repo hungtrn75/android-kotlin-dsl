@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.skymapglobal.cctest.core.util.Constants
+import com.skymapglobal.cctest.workspace.newsfeed.domain.model.Article
+import com.skymapglobal.cctest.workspace.newsfeed.domain.model.ArticlePlaceholder
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.NewsResp
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.NewsfeedQuery
 import com.skymapglobal.cctest.workspace.newsfeed.domain.usecase.GetTopHeadingsUseCase
@@ -18,14 +20,11 @@ class NewsViewModel constructor(private val getTopHeadingsUseCase: GetTopHeading
     ViewModel() {
     lateinit var category: String
 
-    private val _searching = MutableStateFlow(false)
+    private var _searching = false
     private val _topHeadingsFlow =
         MutableStateFlow(NewsResp(totalResults = Int.MAX_VALUE, articles = mutableListOf()))
 
-    private val _combineSearchFlow = combine(_searching, _topHeadingsFlow) { searching, newsResp ->
-        Pair(searching, newsResp)
-    }
-    val topHeadingsLiveData = _combineSearchFlow.asLiveData()
+    val topHeadingsLiveData = _topHeadingsFlow.asLiveData()
     val searchSize: Int get() = _topHeadingsFlow.value.articles?.size ?: 0
 
     fun inject(category: String) {
@@ -40,34 +39,51 @@ class NewsViewModel constructor(private val getTopHeadingsUseCase: GetTopHeading
 
     /* pull to refresh -> refresh: true */
     fun getNews(refresh: Boolean = false) = viewModelScope.launch(Dispatchers.IO) {
-        if (_searching.value || searchSize >= _topHeadingsFlow.value.totalResults) return@launch
+        if (_searching || searchSize >= _topHeadingsFlow.value.totalResults) return@launch
+        _searching = true
+        val previousArticles = _topHeadingsFlow.value.articles?.toMutableList() ?: mutableListOf()
+
         withContext(Dispatchers.Main) {
-            if (refresh)
+            if (refresh) {
+                previousArticles.addAll(
+                    mutableListOf(
+                        Article(placeholder = ArticlePlaceholder.FistPageLoading),
+                        Article(placeholder = ArticlePlaceholder.Loading),
+                    )
+                )
                 _topHeadingsFlow.emit(
                     NewsResp(
                         totalResults = Int.MAX_VALUE,
-                        articles = mutableListOf()
+                        articles = previousArticles.toMutableList()
                     )
                 )
-            _searching.emit(true)
+            } else {
+                previousArticles.add(Article(placeholder = ArticlePlaceholder.Loading))
+                _topHeadingsFlow.emit(_topHeadingsFlow.value.copy(articles = previousArticles.toMutableList()))
+            }
         }
-        val previousArticles = _topHeadingsFlow.value.articles?.toMutableList() ?: mutableListOf()
+
+
         val resp = getTopHeadingsUseCase.execute(
             NewsfeedQuery(
                 page = if (refresh) 1 else (previousArticles.size / Constants.pageSize) + 1,
                 category = category
             )
         )
+        previousArticles.removeLast()
+        if (refresh) previousArticles.removeLast()
         resp.fold({ error ->
             Timber.e("getNews: $error")
+            previousArticles.add(Article(placeholder = ArticlePlaceholder.Error(error)))
             withContext(Dispatchers.Main) {
-                _searching.emit(false)
+                _topHeadingsFlow.emit(_topHeadingsFlow.value.copy(articles = previousArticles.toMutableList()))
+                _searching = false
             }
         }) { newsReps ->
             previousArticles.addAll(newsReps.articles ?: mutableListOf())
             withContext(Dispatchers.Main) {
-                _topHeadingsFlow.emit(newsReps.copy(articles = previousArticles))
-                _searching.emit(false)
+                _topHeadingsFlow.emit(newsReps.copy(articles = previousArticles.toMutableList()))
+                _searching = false
             }
         }
     }

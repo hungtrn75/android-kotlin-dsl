@@ -19,6 +19,7 @@ import com.skymapglobal.cctest.databinding.ItemNewsFirstBinding
 import com.skymapglobal.cctest.databinding.ItemNewsFirstShimmerBinding
 import com.skymapglobal.cctest.databinding.ItemNewsShimmerBinding
 import com.skymapglobal.cctest.workspace.newsfeed.domain.model.Article
+import com.skymapglobal.cctest.workspace.newsfeed.domain.model.ArticlePlaceholder
 import org.ocpsoft.prettytime.PrettyTime
 import java.text.SimpleDateFormat
 import java.util.*
@@ -33,25 +34,29 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
         val firstBinding =
             ItemNewsFirstBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        if (getItem(viewType).isPlaceHolder == true) {
-            val shimmerBinding =
-                ItemNewsShimmerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-
-            if (viewType == 0) {
+        return when (getItem(viewType).placeholder) {
+            ArticlePlaceholder.Loading -> {
+                val shimmerBinding =
+                    ItemNewsShimmerBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                NewsShimmerViewHolder(shimmerBinding)
+            }
+            ArticlePlaceholder.FistPageLoading -> {
                 val shimmerFirstBinding =
                     ItemNewsFirstShimmerBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
                     )
-
-                return NewsShimmerFirstViewHolder(shimmerFirstBinding/**/)
+                NewsShimmerFirstViewHolder(shimmerFirstBinding)
             }
-            return NewsShimmerViewHolder(shimmerBinding)
-        }
-        return when (viewType) {
-            0 -> NewsFirstViewHolder(firstBinding, parent.context)
-            else -> NewsViewHolder(binding, parent.context)
+            else -> {
+                if (viewType == 0) NewsFirstViewHolder(firstBinding, parent.context)
+                else NewsViewHolder(binding, parent.context)
+            }
         }
     }
 
@@ -103,6 +108,7 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
                 Glide.with(context)
                     .load(item.urlToImage)
                     .placeholder(getShimmerDrawable())
+                    .error(ColorDrawable(ContextCompat.getColor(context, R.color.colorShimmer)))
                     .centerCrop()
                     .into(binding.thumbnailBottom)
             } else {
@@ -136,7 +142,8 @@ class NewsViewAdapter(private val listener: OnNewsListener) :
 
         override fun bind(item: Article, position: Int) {
             if (item.urlToImage != null) {
-                Glide.with(context).load(item.urlToImage)
+                Glide.with(context)
+                    .load(item.urlToImage)
                     .placeholder(getShimmerDrawable())
                     .error(ColorDrawable(ContextCompat.getColor(context, R.color.colorShimmer)))
                     .centerCrop()

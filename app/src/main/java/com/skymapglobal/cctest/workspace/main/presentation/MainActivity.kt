@@ -39,10 +39,14 @@ class MainActivity : AppCompatActivity() {
     private fun settingViews() {
         setSupportActionBar(binding.appBar)
         val pagerAdapter = NewsPagerAdapter(this)
-        binding.pager.adapter = pagerAdapter
+        binding.pager.apply {
+            offscreenPageLimit = 1
+            adapter = pagerAdapter
+        }
         TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
             tab.text = categories[position].replaceFirstChar { it.uppercase() }
         }.attach()
+
     }
 
     override fun onResume() {
