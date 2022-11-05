@@ -1,1 +1,0 @@
-D:\android\android-kotlin-dsl\buildSrc\build\classes\kotlin\main\AppConfig.class;D:\android\android-kotlin-dsl\buildSrc\build\classes\kotlin\main\Dependencies.class;D:\android\android-kotlin-dsl\buildSrc\build\classes\kotlin\main\Plugins.class;D:\android\android-kotlin-dsl\buildSrc\build\classes\kotlin\main\Versions.class

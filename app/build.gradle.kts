@@ -12,7 +12,7 @@ android {
         minSdk = AppConfig.minSdkVersion
         targetSdk = AppConfig.targetSdkVersion
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
         multiDexEnabled = true
         vectorDrawables {
             useSupportLibrary = true

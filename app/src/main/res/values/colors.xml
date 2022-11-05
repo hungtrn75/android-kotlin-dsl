@@ -2,7 +2,7 @@
 <resources>
   <color name="black">#FF000000</color>
   <color name="white">#FFFFFFFF</color>
-  <color name="colorShimmer">#FFFFFBFE</color>
+  <color name="colorShimmer">#D0C9C0</color>
   <color name="transparent">#00000000</color>
   <color name="surface">#FFFFFBFE</color>
 </resources>
