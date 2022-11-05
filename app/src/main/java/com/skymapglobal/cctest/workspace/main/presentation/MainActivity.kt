@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayoutMediator
+import com.skymapglobal.cctest.R
 import com.skymapglobal.cctest.databinding.ActivityMainBinding
 import com.skymapglobal.cctest.workspace.newsfeed.presentation.adapter.NewsPagerAdapter
 import kotlinx.coroutines.launch
@@ -35,7 +36,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun settingViews() {
-        setSupportActionBar(binding.appBar)
         val pagerAdapter = NewsPagerAdapter(this)
         binding.pager.apply {
             offscreenPageLimit = 1
@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         lifecycleScope.launch {
             binding.switchBtn.isChecked = viewModel.getDarkMode()
+            binding.appBar.setBackgroundResource(R.color.surface)
             setDarkMode()
         }
     }

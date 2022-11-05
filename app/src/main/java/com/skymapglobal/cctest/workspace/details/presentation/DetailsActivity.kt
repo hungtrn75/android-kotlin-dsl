@@ -77,8 +77,6 @@ class DetailsActivity : AppCompatActivity() {
                 }
             }
         }
-        setSupportActionBar(binding.appBar)
-
     }
 
     private fun settingListeners() {
